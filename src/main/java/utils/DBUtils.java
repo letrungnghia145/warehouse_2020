@@ -1,0 +1,33 @@
+package utils;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import constants.Strategy;
+import enviroment.Enviroment;
+
+public class DBUtils {
+	public static Connection getConnection(Strategy strategy) throws ClassNotFoundException, SQLException {
+		Class.forName(Enviroment.getProps("database.mysql.driver-class"));
+		String url = Enviroment.getProps("database." + strategy.name().toLowerCase());
+		String user = Enviroment.getProps("database.username");
+		String password = Enviroment.getProps("database.password");
+		Connection connection = DriverManager.getConnection(url, user, password);
+		return connection;
+	}
+
+	public static void closeConnectionQuietly(Connection connection) {
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				try {
+					connection.rollback();
+				} catch (SQLException e1) {
+
+				}
+			}
+		}
+	}
+}
