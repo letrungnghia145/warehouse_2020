@@ -1,9 +1,13 @@
 package extractor;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 
 import Exception.IllegalStagingStateException;
@@ -16,24 +20,32 @@ import model.Config;
 import model.Log;
 import model.Student;
 import reader.Reader;
-import reader.XLSXReader;
+import reader.ReaderFactory;
 import utils.DBUtils;
 import utils.TableGenerator;
 
-public class ExtractStaging {
-	public static boolean loadStaging(Log log) {
+public class ExtractStaging<T> {
+	private Class<T> tClass;
+
+	public ExtractStaging(Class<T> tClass) {
+		this.tClass = tClass;
+	}
+
+	public boolean loadStaging(Log log) {
 		try {
+			String source_name = log.getSource_name();
+			String extension = source_name.substring(source_name.lastIndexOf(46));
 			boolean processedStaging = isProcessedStaging();
 			if (processedStaging) {
 				Config config = Config.loadConfig(log.getId_config());
-				Reader<Student> reader = new XLSXReader<Student>(Student.class);
+				Reader<?> reader = ReaderFactory.getReader(extension, tClass);
 				File file = new File(log.getSource_dir() + File.separator + log.getSource_name());
 				boolean isGenerated = TableGenerator.generate(Strategy.URL_STAGING, log.getSource_name(),
 						config.getColumn_list().split(","));
 				if (isGenerated) {
-					List<Student> data = reader.readData(file);
-					for (Student student : data) {
-						insertToStaging(student, log.getSource_name());
+					List<?> data = reader.readData(file);
+					for (Object object : data) {
+						insertToStaging(object, log.getSource_name());
 					}
 					Logger.updateLog(log.getId_log(), Action.LOAD_STAGING, Status.SUCCESS);
 					return true;
@@ -47,30 +59,35 @@ public class ExtractStaging {
 		return false;
 	}
 
-	private static void insertToStaging(Student student, String tableName) {
+	private void insertToStaging(Object object, String tableName) {
 		Connection connection = null;
 		try {
 			connection = DBUtils.getConnection(Strategy.URL_STAGING);
-			String sql = "INSERT INTO `" + tableName + "` VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setInt(1, Integer.parseInt(student.getNum()));
-			statement.setString(2, student.getId());
-			statement.setString(3, student.getLastname());
-			statement.setString(4, student.getFirstname());
-			statement.setString(5, student.getDob());
-			statement.setString(6, student.getClass_id());
-			statement.setString(7, student.getClass_name());
-			statement.setString(8, student.getPhone());
-			statement.setString(9, student.getEmail());
-			statement.setString(10, student.getHome_town());
-			statement.setString(11, student.getNote());
-			statement.executeUpdate();
+			Statement statement = connection.createStatement();
+			String sql = createInsertQuery(object, tableName);
+			statement.executeUpdate(sql);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("ERROR");
 		} finally {
 			DBUtils.closeConnectionQuietly(connection);
 		}
+	}
+
+	private String createInsertQuery(Object object, String tableName) throws NoSuchMethodException, SecurityException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		Field[] fields = object.getClass().getDeclaredFields();
+		StringBuilder s = new StringBuilder();
+		s.append("INSERT INTO `" + tableName + "` values(");
+		for (Field field : fields) {
+			String field_name = field.getName();
+			Method method = object.getClass()
+					.getMethod("get" + field_name.substring(0, 1).toUpperCase() + field_name.substring(1));
+			s.append("'" + method.invoke(object) + "', ");
+		}
+		s.append(")");
+		s.deleteCharAt(s.lastIndexOf(", "));
+		return s.toString();
 	}
 
 	private static boolean isProcessedStaging() throws IllegalStagingStateException {
@@ -93,19 +110,13 @@ public class ExtractStaging {
 	}
 
 	public static void main(String[] args) throws Exception {
-//		File file = new File("data/drive.ecepvn.org/sinhvien_chieu_nhom11.xlsx");
 		List<Config> configs = Config.loadAllConfigs(Status.IN_PROGRESS);
 		for (Config config : configs) {
 			Log log = Logger.readLog(config.getId_config(), Action.DOWNLOAD, Status.SUCCESS);
-			boolean isLoadStaging = ExtractStaging.loadStaging(log);
-			System.out.println(isLoadStaging);
+			if (log == null)
+				break;
+			ExtractStaging<Student> extractor = new ExtractStaging<>(Student.class);
+			System.out.println(extractor.loadStaging(log));
 		}
-//		Reader<StudentForExcel> reader = new XLSXReader<StudentForExcel>(StudentForExcel.class);
-//		List<StudentForExcel> data = reader.readData(file);
-//		for (StudentForExcel studentForExcel : data) {
-//			System.out.println(studentForExcel);
-//		boolean processedStaging = isProcessedStaging();
-//		System.out.println(processedStaging);
-//		}
 	}
 }

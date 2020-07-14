@@ -11,7 +11,7 @@ public class ServerUtils {
 		try {
 			System.loadLibrary("chilkat");
 			CkGlobal ckGlobal = new CkGlobal();
-			ckGlobal.UnlockBundle("OKE");
+			ckGlobal.UnlockBundle("Unlocked");
 		} catch (Exception e) {
 			System.out.println("Fail to load library");
 			System.exit(1);

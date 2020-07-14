@@ -23,6 +23,7 @@ public class ScpDownloader {
 		fileExtensions.add("txt");
 		fileExtensions.add("xlsx");
 		fileExtensions.add("xls");
+		fileExtensions.add("csv");
 	}
 
 	public static void putExtension(String... extensions) {

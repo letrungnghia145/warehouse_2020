@@ -25,8 +25,8 @@ public class Launcher {
 	}
 
 	public static void runLoadToStaging() throws IllegalStagingStateException {
-		Log log = Logger.readLog(1, Action.DOWNLOAD, Status.SUCCESS);
-		ExtractStaging.loadStaging(log);
+//		Log log = Logger.readLog(1, Action.DOWNLOAD, Status.SUCCESS);
+//		ExtractStaging.loadStaging(log);
 	}
 
 	public static void main(String[] args) {
