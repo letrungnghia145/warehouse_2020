@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RepresentObject {
 	public List<String> attributes = new ArrayList<>();
-	public int attributeLength = 0;
+//	public static int numOfColumn;
 
 	public RepresentObject(String... attributes) {
+//		numOfColumn = attributes.length;
 		for (String value : attributes) {
 			if (value != null) {
 				this.attributes.add(value);
@@ -20,6 +21,10 @@ public class RepresentObject {
 
 	public void addValue(String value) {
 		attributes.add(value);
-		attributeLength++;
+//		numOfColumn++;
 	}
+
+//	public int getNumOfColumn() {
+//		return numOfColumn;
+//	}
 }

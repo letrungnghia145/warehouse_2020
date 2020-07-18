@@ -2,7 +2,9 @@ package model;
 
 import java.io.File;
 
-public class WrapFile extends File {
+import reader.Readable;
+
+public class WrapFile extends File implements Readable {
 	private static final long serialVersionUID = 1L;
 	private String dataContentType;
 	private String fileType;

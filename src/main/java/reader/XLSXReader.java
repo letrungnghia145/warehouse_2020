@@ -1,13 +1,10 @@
 package reader;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -18,11 +15,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import model.RepresentObject;
+import model.WrapArrayList;
+import model.WrapFile;
 
 public class XLSXReader implements Reader {
 
-	public List<RepresentObject> readData(File file) throws Exception {
-		List<RepresentObject> data = new ArrayList<>();
+	public WrapArrayList readData(Readable readable) throws Exception {
+		WrapFile file = (WrapFile) readable;
+		WrapArrayList data = new WrapArrayList(file.getDataContentType());
 		try {
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 			@SuppressWarnings("resource")
@@ -30,12 +30,12 @@ public class XLSXReader implements Reader {
 			Sheet sheet = workbook.getSheetAt(0);
 			Iterator<Row> rows = sheet.rowIterator();
 			Row row = rows.next();
-			int index = row.getPhysicalNumberOfCells();
+			data.setNumOfColumn(row.getPhysicalNumberOfCells());
 			RepresentObject representObject = null;
 			while (rows.hasNext()) {
 				representObject = new RepresentObject();
 				row = rows.next();
-				for (int i = 0; i < index; i++) {
+				for (int i = 0; i < data.getNumOfColumn(); i++) {
 					representObject.addValue(getValue(row.getCell(i)));
 				}
 				data.add(representObject);

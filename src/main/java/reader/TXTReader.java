@@ -1,13 +1,10 @@
 package reader;
 
-import java.io.File;
-import java.util.List;
-
-import model.RepresentObject;
+import model.WrapArrayList;
 
 public class TXTReader implements Reader {
 
-	public List<RepresentObject> readData(File file) {
+	public WrapArrayList readData(Readable readable) {
 		// TODO Auto-generated method stub
 		return null;
 	}

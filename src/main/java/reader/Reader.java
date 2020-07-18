@@ -1,10 +1,7 @@
 package reader;
 
-import java.io.File;
-import java.util.List;
-
-import model.RepresentObject;
+import model.WrapArrayList;
 
 public interface Reader {
-	public List<RepresentObject> readData(File file) throws Exception;
+	public WrapArrayList readData(Readable file) throws Exception;
 }
