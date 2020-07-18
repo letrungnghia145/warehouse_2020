@@ -128,9 +128,9 @@ public class Logger {
 			preparedStatement.setInt(2, log.getId_config());
 			preparedStatement.setString(3, log.getSource_dir());
 			preparedStatement.setString(4, log.getSource_name());
-			preparedStatement.setTimestamp(5, log.getTime_insert());
-			preparedStatement.setString(6, log.getCurrent_action());
-			preparedStatement.setString(7, log.getStatus());
+			preparedStatement.setTimestamp(6, log.getTime_insert());
+			preparedStatement.setString(7, log.getCurrent_action());
+			preparedStatement.setString(8, log.getStatus());
 			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println(e);

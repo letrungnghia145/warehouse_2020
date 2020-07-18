@@ -3,14 +3,11 @@ package reader;
 import java.io.File;
 import java.util.List;
 
-public class TXTReader<T> implements Reader<T> {
-	private Class<T> instanceClass;
+import model.RepresentObject;
 
-	public TXTReader(Class<T> instanceClass) {
-		this.instanceClass = instanceClass;
-	}
+public class TXTReader implements Reader {
 
-	public List<T> readData(File file) {
+	public List<RepresentObject> readData(File file) {
 		// TODO Auto-generated method stub
 		return null;
 	}

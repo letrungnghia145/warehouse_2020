@@ -1,122 +1,99 @@
 package extractor;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.List;
 
-import Exception.IllegalStagingStateException;
 import constants.Action;
-import constants.ConstantQuery;
 import constants.Status;
 import constants.Strategy;
 import log.Logger;
 import model.Config;
 import model.Log;
-import model.Student;
+import model.RepresentObject;
+import model.WrapFile;
 import reader.Reader;
 import reader.ReaderFactory;
+import utils.DBManagementUtils;
 import utils.DBUtils;
-import utils.TableGenerator;
 
-public class ExtractStaging<T> {
-	private Class<T> tClass;
+public class ExtractStaging {
 
-	public ExtractStaging(Class<T> tClass) {
-		this.tClass = tClass;
+	private static boolean insertStaging(WrapFile file, int attributeLength) throws Exception {
+		StringBuilder sqlCallProcedure = new StringBuilder("CALL insert" + file.getDataContentType() + "(");
+		for (int i = 0; i < attributeLength; i++) {
+			sqlCallProcedure.append("?,");
+		}
+		sqlCallProcedure.deleteCharAt(sqlCallProcedure.lastIndexOf(","));
+		sqlCallProcedure.append(")");
+		Connection connection = null;
+		try {
+			Reader reader = ReaderFactory.getReader(file.getFileType());
+			List<RepresentObject> data = reader.readData(file);
+			connection = DBUtils.getConnection(Strategy.URL_STAGING);
+			connection.setAutoCommit(false);
+			CallableStatement callableStatement = connection.prepareCall(sqlCallProcedure.toString());
+
+			for (RepresentObject object : data) {
+				List<String> attributes = object.attributes;
+				for (int i = 0; i < attributes.size(); i++) {
+					if (i == 0)
+						callableStatement.setInt(i + 1, Integer.parseInt(attributes.get(i)));
+					callableStatement.setString(i + 1, attributes.get(i));
+				}
+				callableStatement.addBatch();
+			}
+			callableStatement.executeBatch();
+			connection.commit();
+			return true;
+
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		} finally {
+			DBUtils.closeConnectionQuietly(connection);
+		}
 	}
 
-	public boolean loadStaging(Log log) {
+	public static boolean loadStaging(Log log) {
+		Connection connection = null;
+		Strategy url_connection = Strategy.URL_STAGING;
 		try {
-			String source_name = log.getSource_name();
-			String extension = source_name.substring(source_name.lastIndexOf(46));
-			boolean processedStaging = isProcessedStaging();
-			if (processedStaging) {
-				Config config = Config.loadConfig(log.getId_config());
-				Reader<?> reader = ReaderFactory.getReader(extension, tClass);
-				File file = new File(log.getSource_dir() + File.separator + log.getSource_name());
-				boolean isGenerated = TableGenerator.generate(Strategy.URL_STAGING, log.getSource_name(),
-						config.getColumn_list().split(","));
-				if (isGenerated) {
-					List<?> data = reader.readData(file);
-					for (Object object : data) {
-						insertToStaging(object, log.getSource_name());
-					}
-					Logger.updateLog(log.getId_log(), Action.LOAD_STAGING, Status.SUCCESS);
-					return true;
-				}
+			connection = DBUtils.getConnection(url_connection);
+			Config config = Config.loadConfig(log.getId_config());
+			WrapFile file = new WrapFile(log.getSource_dir() + File.separator + log.getSource_name());
+			String tableName = file.getDataContentType();
+			String[] columns = config.getColumn_list().split(",");
+			boolean isCreated = DBManagementUtils.createTable(url_connection, tableName, columns);
+			if (isCreated) {
+				boolean isInserted = insertStaging(file, columns.length);
+				Logger.updateLog(log.getId_log(), Action.LOAD_STAGING, Status.SUCCESS);
+				return isInserted;
 			}
-		} catch (IllegalStagingStateException e) {
-			System.out.println(e.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.updateLog(log.getId_log(), Action.LOAD_STAGING, Status.FAIL);
+		} finally {
+			DBUtils.closeConnectionQuietly(connection);
 		}
 		return false;
 	}
 
-	private void insertToStaging(Object object, String tableName) {
-		Connection connection = null;
-		try {
-			connection = DBUtils.getConnection(Strategy.URL_STAGING);
-			Statement statement = connection.createStatement();
-			String sql = createInsertQuery(object, tableName);
-			statement.executeUpdate(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR");
-		} finally {
-			DBUtils.closeConnectionQuietly(connection);
-		}
-	}
-
-	private String createInsertQuery(Object object, String tableName) throws NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Field[] fields = object.getClass().getDeclaredFields();
-		StringBuilder s = new StringBuilder();
-		s.append("INSERT INTO `" + tableName + "` values(");
-		for (Field field : fields) {
-			String field_name = field.getName();
-			Method method = object.getClass()
-					.getMethod("get" + field_name.substring(0, 1).toUpperCase() + field_name.substring(1));
-			s.append("'" + method.invoke(object) + "', ");
-		}
-		s.append(")");
-		s.deleteCharAt(s.lastIndexOf(", "));
-		return s.toString();
-	}
-
-	private static boolean isProcessedStaging() throws IllegalStagingStateException {
-		Connection connection = null;
-		try {
-			connection = DBUtils.getConnection(Strategy.URL_STAGING);
-			PreparedStatement statement = connection.prepareStatement(ConstantQuery.GET_NAME_TABLE_FROM_DB);
-			statement.setString(1, "staging");
-			ResultSet rs = statement.executeQuery();
-			if (!rs.next()) {
-				return true;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			DBUtils.closeConnectionQuietly(connection);
-		}
-		throw new IllegalStagingStateException("Staging is processing");
-	}
-
-	public static void main(String[] args) throws Exception {
-		List<Config> configs = Config.loadAllConfigs(Status.IN_PROGRESS);
-		for (Config config : configs) {
-			Log log = Logger.readLog(config.getId_config(), Action.DOWNLOAD, Status.SUCCESS);
-			if (log == null)
-				break;
-			ExtractStaging<Student> extractor = new ExtractStaging<>(Student.class);
-			System.out.println(extractor.loadStaging(log));
-		}
-	}
+//	private static boolean isProcessedStaging() throws IllegalStagingStateException {
+//		Connection connection = null;
+//		try {
+//			connection = DBUtils.getConnection(Strategy.URL_STAGING);
+//			PreparedStatement statement = connection.prepareStatement(ConstantQuery.GET_NAME_TABLE_FROM_DB);
+//			statement.setString(1, "staging");
+//			ResultSet rs = statement.executeQuery();
+//			if (!rs.next()) {
+//				return true;
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtils.closeConnectionQuietly(connection);
+//		}
+//		throw new IllegalStagingStateException("Staging is processing");
+//	}
 }

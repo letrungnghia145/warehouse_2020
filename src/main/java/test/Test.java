@@ -1,30 +1,34 @@
 package test;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.File;
+import java.io.FileOutputStream;
 
-import model.Student;
+import constants.Strategy;
+import utils.DBManagementUtils;
 
 public class Test {
-	public static String getSQL(Object object) throws NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Field[] fields = object.getClass().getDeclaredFields();
-		StringBuilder s = new StringBuilder();
-		s.append("INSERT INTO staging values(");
-		for (Field field : fields) {
-			Method method = object.getClass()
-					.getMethod("get" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1));
-			s.append("'"+method.invoke(object) + "', ");
-		}
-		s.append(")");
-		s.deleteCharAt(s.lastIndexOf(", "));
-		return s.toString();
-	}
 
 	public static void main(String[] args) throws Exception {
-		Student student = new Student("1", "17130132", "Lê Trung", "Nghĩa", "14/05/1999", "DH17DTC",
-				"Công Nghệ Thông Tin", "0868880758", "17130132@st.hcmuaf.edu.vn", "Tây Ninh", "blank");
-		System.out.println(getSQL(student));
+		FileOutputStream fos = new FileOutputStream(new File("classes/name.java"), true);
+		String content = "import java.io.File;\r\n" + 
+				"import java.io.FileOutputStream;\r\n" + 
+				"import java.util.Date;\r\n" + 
+				"\r\n" + 
+				"import constants.Strategy;\r\n" + 
+				"import utils.DBManagementUtils;\r\n" + 
+				"\r\n" + 
+				"public class Test {\r\n" + 
+				"	private int id;\r\n" + 
+				"	private String name;\r\n" + 
+				"	private Date dob;\r\n" + 
+				"//	public static void main(String[] args) throws Exception {\r\n" + 
+				"//		FileOutputStream fos = new FileOutputStream(\"classes/name.java\");\r\n" + 
+				"//		String \r\n" + 
+				"//	}\r\n" + 
+				"}\r\n" + 
+				"";
+		byte[] bytes = content.getBytes();
+		fos.write(bytes);
+		fos.close();
 	}
 }
