@@ -13,14 +13,14 @@ import constants.ConstantQuery;
 import constants.Status;
 import constants.Strategy;
 import model.Log;
-import utils.DBUtils;
+import utils.DBConnectionUtils;
 
 public class Logger {
 	public static Log readLog(int id_log) {
 		Connection connection = null;
 		Log log = null;
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			PreparedStatement statement = connection.prepareStatement(ConstantQuery.GET_LOG_BY_ID);
 			statement.setInt(1, id_log);
 			ResultSet rs = statement.executeQuery();
@@ -37,7 +37,7 @@ public class Logger {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return log;
 	}
@@ -46,7 +46,7 @@ public class Logger {
 		Connection connection = null;
 		ArrayList<Log> logs = new ArrayList<Log>();
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			PreparedStatement statement = connection.prepareStatement(ConstantQuery.GET_ALL_LOGS);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -64,7 +64,7 @@ public class Logger {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return logs;
 	}
@@ -73,7 +73,7 @@ public class Logger {
 		Connection connection = null;
 		Log log = null;
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			PreparedStatement statement = connection.prepareStatement(ConstantQuery.GET_LOG_BY_IDCONFIG_ACTION_STATUS);
 			statement.setInt(1, id_config);
 			statement.setString(2, current_action.name());
@@ -92,7 +92,7 @@ public class Logger {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return log;
 	}
@@ -100,7 +100,7 @@ public class Logger {
 	public static void updateLog(int id_log, Action current_action, Status status) {
 		Connection connection = null;
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			PreparedStatement statement = connection.prepareStatement(ConstantQuery.UPDATE_LOG_ACTION_STATUS_LOG_BY_ID);
 			statement.setString(1, current_action.name());
 			statement.setString(2, status.name());
@@ -109,14 +109,14 @@ public class Logger {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 	}
 
 	public static void writeLog(Log log) {
 		Connection connection = null;
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery("SELECT COUNT(*) AS TOTAL FROM LOG");
 			int index = 0;
@@ -136,7 +136,7 @@ public class Logger {
 			System.out.println(e);
 			System.out.println("ERROR WHEN WRITTING LOG");
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 
 	}
@@ -157,7 +157,7 @@ public class Logger {
 		List<String> files = new ArrayList<String>();
 		Connection connection = null;
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			String sql = "SELECT source_name FROM LOG";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			ResultSet rs = preparedStatement.executeQuery();
@@ -167,7 +167,7 @@ public class Logger {
 		} catch (Exception e) {
 			// TODO: handle exception
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return files;
 	}

@@ -11,11 +11,11 @@ public class WrapFile extends File implements Readable {
 
 	public WrapFile(String pathname) {
 		super(pathname);
-		dataContentType = getDataContentType(this.getName());
-		fileType = getFileType(this.getName());
+		dataContentType = analyzeFileToGetContentType(this.getName());
+		fileType = analyzeFileToGetFileType(this.getName());
 	}
 
-	private String getDataContentType(String name) {
+	private String analyzeFileToGetContentType(String name) {
 		String lowerNameCase = name.toLowerCase();
 		if (lowerNameCase.startsWith("sinhvien"))
 			return "Student";
@@ -29,15 +29,17 @@ public class WrapFile extends File implements Readable {
 
 	}
 
-	private String getFileType(String name) {
+	private String analyzeFileToGetFileType(String name) {
 		String fileType = name.substring(name.lastIndexOf(46));
 		return fileType;
 	}
 
+	@Override
 	public String getDataContentType() {
 		return dataContentType;
 	}
 
+	@Override
 	public String getFileType() {
 		return fileType;
 	}

@@ -12,7 +12,7 @@ import constants.Status;
 import constants.Strategy;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import utils.DBUtils;
+import utils.DBConnectionUtils;
 
 @Data
 @NoArgsConstructor
@@ -31,7 +31,7 @@ public class Config {
 		Connection connection = null;
 		Config config = null;
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			PreparedStatement statement = connection.prepareStatement(ConstantQuery.LOAD_CONFIG_BY_ID);
 			statement.setInt(1, id_config);
 			ResultSet rs = statement.executeQuery();
@@ -50,7 +50,7 @@ public class Config {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return config;
 	}
@@ -59,7 +59,7 @@ public class Config {
 		Connection connection = null;
 		ArrayList<Config> configs = new ArrayList<Config>();
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			PreparedStatement statement = connection.prepareStatement(ConstantQuery.LOAD_ALL_CONFIGS);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -79,7 +79,7 @@ public class Config {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return configs;
 	}
@@ -88,7 +88,7 @@ public class Config {
 		Connection connection = null;
 		ArrayList<Config> configs = new ArrayList<Config>();
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			PreparedStatement statement = connection.prepareStatement(ConstantQuery.LOAD_CONFIG_BY_STATUS);
 			statement.setString(1, status.name());
 			ResultSet rs = statement.executeQuery();
@@ -109,7 +109,7 @@ public class Config {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return configs;
 	}
@@ -117,7 +117,7 @@ public class Config {
 	public void updateStatus(Status status) {
 		Connection connection = null;
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_CONTROL);
+			connection = DBConnectionUtils.getConnection(Strategy.URL_CONTROL);
 			PreparedStatement statement = connection.prepareStatement(ConstantQuery.UPDATE_CONFIG_STATUS_BY_CONFIG_ID);
 			statement.setString(1, status.name());
 			statement.setInt(2, this.getId_config());
@@ -125,7 +125,7 @@ public class Config {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 	}
 

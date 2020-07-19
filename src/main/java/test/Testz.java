@@ -1,42 +1,30 @@
 package test;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
-import constants.Strategy;
+import model.ListData;
 import model.RepresentObject;
-import utils.DBUtils;
 
 public class Testz {
-	public static void test(String nameObject) {
-		ArrayList<RepresentObject> data = new ArrayList<>();
-		String[] columns = new String[] { "id", "lastname", "firstname", "dob", "class_id", "email", "home_town" };
-		Connection connection = null;
+//	private Map<String, Object> contrains = new HashMap<String, Object>();
+	Properties properties = new Properties();
+
+	public static ListData transform(ListData draw_data) {
+		ListData data;
 		try {
-			connection = DBUtils.getConnection(Strategy.URL_STAGING);
-			CallableStatement callableStatement = connection.prepareCall("CALL getAll"+nameObject+"s()");
-			ResultSet rs = callableStatement.executeQuery();
-			RepresentObject object = null;
-			while (rs.next()) {
-				object = new RepresentObject();
-				for (String column : columns) {
-					object.addValue(rs.getString(column));
-				}
-				data.add(object);
-			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			DBUtils.closeConnectionQuietly(connection);
 		}
-
-		for (RepresentObject representObject : data) {
-			System.out.println(representObject.attributes);
-		}
+		return null;
 	}
+
 	public static void main(String[] args) {
-		test("Student");
+		Properties properties = new Properties();
+		properties.put("map", new HashMap<>());
+		properties.put(new RepresentObject(), 7);
+		System.out.println(properties.get("map"));
 	}
 }

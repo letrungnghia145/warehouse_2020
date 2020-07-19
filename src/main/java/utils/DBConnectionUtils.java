@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import constants.Strategy;
 import enviroment.Enviroment;
 
-public class DBUtils {
+public class DBConnectionUtils {
 	public static Connection getConnection(Strategy strategy) throws ClassNotFoundException, SQLException {
 		Class.forName(Enviroment.getProps("database.mysql.driver-class"));
 		String url = Enviroment.getProps("database." + strategy.name().toLowerCase());

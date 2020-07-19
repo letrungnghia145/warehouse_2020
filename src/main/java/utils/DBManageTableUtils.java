@@ -5,7 +5,7 @@ import java.sql.Connection;
 
 import constants.Strategy;
 
-public class DBManagementUtils {
+public class DBManageTableUtils {
 
 	public static boolean createTable(Strategy url_connection, String tableName, String... columns) {
 		StringBuilder sqlCreateTable = new StringBuilder();
@@ -24,7 +24,7 @@ public class DBManagementUtils {
 				+ "`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;");
 		Connection connection = null;
 		try {
-			connection = DBUtils.getConnection(url_connection);
+			connection = DBConnectionUtils.getConnection(url_connection);
 			connection.setAutoCommit(false);
 			CallableStatement prepareCall = connection.prepareCall("USE STAGING");
 			prepareCall.addBatch(sqlCreateTable.toString());
@@ -33,9 +33,9 @@ public class DBManagementUtils {
 			prepareCall.executeBatch();
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return false;
 	}
@@ -58,15 +58,4 @@ public class DBManagementUtils {
 		sqlCreateProcedure.append(");END");
 		return sqlCreateProcedure.toString();
 	}
-//
-//	public static void main(String[] args) {
-//		long start = System.currentTimeMillis();
-//		String tableName = "Student";
-//		String[] columns = "num:int(45):not null,id:varchar(255):null,lastname:varchar(255):null,firstname:varchar(255):null,dob:varchar(255):null,class_id:varchar(255):null,class_name:varchar(255):null,phone:varchar(255):null,email:varchar(255):null,home_town:varchar(255):null,note:varchar(255):null"
-//				.split(",");
-//		boolean isCreated = DBManagementUtils.createTable(Strategy.URL_STAGING, tableName, columns);
-//		System.out.println(isCreated);
-//		long end = System.currentTimeMillis();
-//		System.out.println(end - start + "ms");
-//	}
 }

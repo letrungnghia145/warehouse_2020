@@ -4,11 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import constants.Strategy;
 import model.ListData;
 import model.RepresentObject;
 import test.DBTable;
-import utils.DBUtils;
+import utils.DBConnectionUtils;
 
 public class DBReader implements Reader {
 
@@ -24,7 +23,7 @@ public class DBReader implements Reader {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return data;
 	}
@@ -60,30 +59,10 @@ public class DBReader implements Reader {
 			}
 
 		} catch (Exception e) {
-			DBUtils.rollbackQuietly(connection);
+			DBConnectionUtils.rollbackQuietly(connection);
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
-	}
-
-	public static void main(String[] args) throws Exception {
-		Reader reader = ReaderFactory.getReader("db");
-		Readable readable = new DBTable(Strategy.URL_STAGING, "student");
-		ListData data = reader.readData(readable);
-		for (RepresentObject object : data) {
-			System.out.println(data.getDataContentType() + object.attributes);
-		}
-
-//		String[] columns = new String[] { "id", "firstname", "lastname", "dob", "class_id", "email", "home_town" };
-//
-//		String procedureName = "get" + "student" + "s";
-//		StringBuilder builder = new StringBuilder("CREATE PROCEDURE " + procedureName + "() BEGIN " + "SELECT ");
-//		for (String column : columns) {
-//			builder.append(column + ", ");
-//		}
-//		builder.deleteCharAt(builder.lastIndexOf(","));
-//		builder.append("FROM student; END");
-//		System.out.println(builder.toString());
 	}
 }

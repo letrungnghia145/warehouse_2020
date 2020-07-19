@@ -14,8 +14,8 @@ import model.ListData;
 import model.WrapFile;
 import reader.Reader;
 import reader.ReaderFactory;
-import utils.DBManagementUtils;
-import utils.DBUtils;
+import utils.DBManageTableUtils;
+import utils.DBConnectionUtils;
 
 public class Test {
 	public static boolean loadStaging(Log log) {
@@ -25,7 +25,7 @@ public class Test {
 			WrapFile file = new WrapFile(log.getSource_dir() + File.separator + log.getSource_name());
 			String[] columns = config.getColumn_list().split(",");
 			String tableName = file.getDataContentType();
-			boolean isTableCreated = DBManagementUtils.createTable(Strategy.URL_STAGING, tableName, columns);
+			boolean isTableCreated = DBManageTableUtils.createTable(Strategy.URL_STAGING, tableName, columns);
 			if (isTableCreated) {
 				Reader reader = ReaderFactory.getReader(file.getFileType());
 				ListData data = reader.readData(file);
@@ -35,7 +35,7 @@ public class Test {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return false;
 	}
@@ -51,7 +51,7 @@ public class Test {
 		sqlCallProcedure.deleteCharAt(sqlCallProcedure.lastIndexOf(","));
 		Connection connection = null;
 		try {
-			connection = DBUtils.getConnection(url_connection);
+			connection = DBConnectionUtils.getConnection(url_connection);
 			CallableStatement statement = connection.prepareCall(sqlCallProcedure.toString());
 			connection.setAutoCommit(false);
 			for (RepresentObject object : data) {
@@ -72,7 +72,7 @@ public class Test {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			DBUtils.closeConnectionQuietly(connection);
+			DBConnectionUtils.closeConnectionQuietly(connection);
 		}
 		return false;
 	}
