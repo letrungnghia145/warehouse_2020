@@ -16,6 +16,9 @@ public class ReaderFactory {
 		case "csv":
 			reader = new CSVReader();
 			break;
+		case "db":
+			reader = new DBReader();
+			break;
 		default:
 			break;
 		}

@@ -10,7 +10,7 @@ import log.Logger;
 import model.Config;
 import model.Log;
 import model.RepresentObject;
-import model.WrapArrayList;
+import model.ListData;
 import model.WrapFile;
 import reader.Reader;
 import reader.ReaderFactory;
@@ -28,7 +28,7 @@ public class Test {
 			boolean isTableCreated = DBManagementUtils.createTable(Strategy.URL_STAGING, tableName, columns);
 			if (isTableCreated) {
 				Reader reader = ReaderFactory.getReader(file.getFileType());
-				WrapArrayList data = reader.readData(file);
+				ListData data = reader.readData(file);
 				return insertData(Strategy.URL_STAGING, data);
 			}
 
@@ -40,7 +40,7 @@ public class Test {
 		return false;
 	}
 
-	private static boolean insertData(Strategy url_connection, WrapArrayList data) {
+	private static boolean insertData(Strategy url_connection, ListData data) {
 		StringBuilder sqlCallProcedure = new StringBuilder("CALL insert" + data.getDataContentType() + '(');
 		int count = 0;
 		while (count < data.getNumOfColumn()) {

@@ -14,15 +14,15 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import model.ListData;
 import model.RepresentObject;
-import model.WrapArrayList;
 import model.WrapFile;
 
 public class XLSXReader implements Reader {
 
-	public WrapArrayList readData(Readable readable) throws Exception {
+	public ListData readData(Readable readable) throws Exception {
 		WrapFile file = (WrapFile) readable;
-		WrapArrayList data = new WrapArrayList(file.getDataContentType());
+		ListData data = new ListData(file.getDataContentType());
 		try {
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 			@SuppressWarnings("resource")

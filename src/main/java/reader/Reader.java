@@ -1,7 +1,7 @@
 package reader;
 
-import model.WrapArrayList;
+import model.ListData;
 
 public interface Reader {
-	public WrapArrayList readData(Readable file) throws Exception;
+	public ListData readData(Readable readable) throws Exception;
 }

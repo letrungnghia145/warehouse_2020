@@ -1,10 +1,10 @@
 package reader;
 
-import model.WrapArrayList;
+import model.ListData;
 
 public class TXTReader implements Reader {
 
-	public WrapArrayList readData(Readable readable) {
+	public ListData readData(Readable readable) {
 		// TODO Auto-generated method stub
 		return null;
 	}

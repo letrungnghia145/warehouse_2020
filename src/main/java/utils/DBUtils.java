@@ -30,4 +30,12 @@ public class DBUtils {
 			}
 		}
 	}
+
+	public static void rollbackQuietly(Connection connection) {
+		try {
+			connection.rollback();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
