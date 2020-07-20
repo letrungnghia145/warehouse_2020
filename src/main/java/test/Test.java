@@ -55,13 +55,13 @@ public class Test {
 			CallableStatement statement = connection.prepareCall(sqlCallProcedure.toString());
 			connection.setAutoCommit(false);
 			for (RepresentObject object : data) {
-				List<String> attributes = object.attributes;
+				List<Object> attributes = object.attributes;
 				for (int i = 0; i < attributes.size(); i++) {
 					if (i == 0) {
-						statement.setInt(i + 1, Integer.parseInt(attributes.get(i)));
+						statement.setInt(i + 1, Integer.parseInt(String.valueOf(attributes.get(i))));
 						continue;
 					}
-					statement.setString(i + 1, attributes.get(i));
+					statement.setString(i + 1, String.valueOf(attributes.get(i)));
 				}
 				statement.addBatch();
 			}

@@ -42,7 +42,7 @@ public class DBManageTableUtils {
 
 	private static String getQueryCreateInsertProcedure(String tableName, String... columns) {
 		StringBuilder sqlCreateProcedure = new StringBuilder();
-		sqlCreateProcedure.append("CREATE PROCEDURE insert" + tableName + "s(");
+		sqlCreateProcedure.append("CREATE PROCEDURE insert" + tableName + "(");
 		for (int i = 0; i < columns.length; i++) {
 			String[] split = columns[i].split(":");
 			sqlCreateProcedure.append("IN " + split[0] + " " + split[1] + ",");

@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import model.DBTable;
 import model.ListData;
 import model.RepresentObject;
-import test.DBTable;
 import utils.DBConnectionUtils;
 
 public class DBReader implements Reader {

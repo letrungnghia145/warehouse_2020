@@ -36,11 +36,11 @@ public class ExtractStaging {
 			CallableStatement callableStatement = connection.prepareCall(sqlCallProcedure.toString());
 
 			for (RepresentObject object : data) {
-				List<String> attributes = object.attributes;
+				List<Object> attributes = object.attributes;
 				for (int i = 0; i < attributes.size(); i++) {
 					if (i == 0)
-						callableStatement.setInt(i + 1, Integer.parseInt(attributes.get(i)));
-					callableStatement.setString(i + 1, attributes.get(i));
+						callableStatement.setInt(i + 1, Integer.parseInt(String.valueOf(attributes.get(i))));
+					callableStatement.setString(i + 1, String.valueOf(attributes.get(i)));
 				}
 				callableStatement.addBatch();
 			}
@@ -49,6 +49,7 @@ public class ExtractStaging {
 			return true;
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new Exception(e.getMessage());
 		} finally {
 			DBConnectionUtils.closeConnectionQuietly(connection);
