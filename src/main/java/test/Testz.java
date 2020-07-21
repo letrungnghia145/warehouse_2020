@@ -1,5 +1,7 @@
 package test;
 
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,9 +50,9 @@ public class Testz {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getAttributeFormated(Class<T> classType, Object valueAsObject) throws UnsupportedDataTypeException {
+	public <T> T getAttributeFormated(Class<T> typeToFormat, Object valueAsObject) throws UnsupportedDataTypeException {
 		String value = String.valueOf(valueAsObject);
-		String name_class = classType.getName();
+		String name_class = typeToFormat.getName();
 		switch (name_class) {
 		case "java.lang.Integer":
 			return (T) new Integer(value);
@@ -78,7 +80,7 @@ public class Testz {
 				return (T) new java.sql.Timestamp(DateFormatUtils.getTimeInMilis(value));
 			}
 		default:
-			throw new UnsupportedDataTypeException(classType.getName() + " does not supported to cast value");
+			throw new UnsupportedDataTypeException(typeToFormat.getName() + " does not supported to cast value");
 		}
 	}
 
@@ -107,6 +109,13 @@ public class Testz {
 //		}
 
 		// JOB schedule: crontab -e
-
+		Map<String, Class<?>> map = new HashMap<>();
+		map.put("id", Integer.class);
+		map.put("lastname", String.class);
+		map.put("firstname", String.class);
+		map.put("dob", Date.class);
+		map.put("class_id", String.class);
+		map.put("email", String.class);
+		map.put("home_town", String.class);
 	}
 }

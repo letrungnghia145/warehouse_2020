@@ -23,7 +23,11 @@ public class TXTReader implements Reader {
 		while ((readLine = reader.readLine()) != null) {
 			object = new RepresentObject();
 			if (index == 0) {
-				data.setNumOfColumn(readLine.split(delimiter).length);
+				String[] attributes = readLine.split(delimiter);
+				for (String attribute : attributes) {
+					object.addAttribute(attribute);
+				}
+				data.setMetaData(object);
 				index++;
 				continue;
 			}
@@ -32,7 +36,6 @@ public class TXTReader implements Reader {
 			for (String attribute : attributes) {
 				object.addAttribute(attribute);
 			}
-			index++;
 			data.add(object);
 		}
 		reader.close();

@@ -11,7 +11,7 @@ import utils.DBConnectionUtils;
 
 public class LoadClass {
 	public static boolean loadDataToDB(Strategy url_connection, ListData data) throws Exception {
-		String sqlCallProcedure = getSqlCallProcedure(data.getDataContentType(), data.getNumOfColumns());
+		String sqlCallProcedure = getSqlCallProcedure(data.getDataContentType(), data.getMetaData().getNumOfColumns());
 		Connection connection = null;
 		try {
 			connection = DBConnectionUtils.getConnection(url_connection);

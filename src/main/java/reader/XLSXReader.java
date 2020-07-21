@@ -29,13 +29,23 @@ public class XLSXReader implements Reader {
 			Workbook workbook = new XSSFWorkbook(inputStream);
 			Sheet sheet = workbook.getSheetAt(0);
 			Iterator<Row> rows = sheet.rowIterator();
-			Row row = rows.next();
-			data.setNumOfColumn(row.getPhysicalNumberOfCells());
 			RepresentObject representObject = null;
+			Row row = null;
+			int index = 0;
 			while (rows.hasNext()) {
 				representObject = new RepresentObject();
+				if (index == 0) {
+					row = rows.next();
+					for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
+						representObject.addAttribute(getValue(row.getCell(i)));
+					}
+					data.setMetaData(representObject);
+					index++;
+					continue;
+				}
 				row = rows.next();
-				for (int i = 0; i < data.getNumOfColumns(); i++) {
+//				row = rows.next();
+				for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
 					representObject.addAttribute(getValue(row.getCell(i)));
 				}
 				data.add(representObject);

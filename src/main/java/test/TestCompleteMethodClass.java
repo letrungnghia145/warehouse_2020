@@ -30,7 +30,7 @@ public class TestCompleteMethodClass {
 		for (RepresentObject object : data) {
 			System.out.println(data.getDataContentType() + object.attributes);
 		}
-		return data.getNumOfColumns();
+		return data.getMetaData().getNumOfColumns();
 	}
 
 	public static int testReadDataMethodOfXLSXReaderClass() throws Exception {
@@ -40,7 +40,7 @@ public class TestCompleteMethodClass {
 		for (RepresentObject object : data) {
 			System.out.println(data.getDataContentType() + object.attributes);
 		}
-		return data.getNumOfColumns();
+		return data.getMetaData().getNumOfColumns();
 	}
 
 	public static void testLoadStagingMethodOfExtractStagingClass() {
@@ -57,8 +57,9 @@ public class TestCompleteMethodClass {
 		for (RepresentObject representObject : data) {
 			System.out.println(representObject.attributes);
 		}
-		return data.getNumOfColumns();
+		return data.getMetaData().getNumOfColumns();
 	}
+
 	public static void testCreateTableMethodOfDBManagementUtilsClass() {
 		Strategy url_connection = Strategy.URL_STAGING;
 		String name = "student";
@@ -95,7 +96,7 @@ public class TestCompleteMethodClass {
 
 	public static void run() throws Exception {
 		int rs = 0;
-//		/* 1 */ rs = testReadDataMethodOfDBReaderClass();
+		/* 1 */ rs = testReadDataMethodOfDBReaderClass();
 //		/* 2 */ rs = testReadDataMethodOfXLSXReaderClass();
 //		/* 3 */ testLoadStagingMethodOfExtractStagingClass();
 //		/* 4 */ testTransformMethodOfTransformClass();
@@ -108,6 +109,6 @@ public class TestCompleteMethodClass {
 		long start = System.currentTimeMillis();
 		run();
 		long end = System.currentTimeMillis();
-		System.out.println(end - start + "ms");
+		System.out.println("Execute time: " + (end - start) + "ms");
 	}
 }

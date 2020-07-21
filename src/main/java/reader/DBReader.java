@@ -2,6 +2,7 @@ package reader;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
 import model.DBTable;
@@ -48,11 +49,16 @@ public class DBReader implements Reader {
 			}
 			connection.commit();
 			ResultSet rs = statement.getResultSet();
-			data.setNumOfColumn(rs.getMetaData().getColumnCount());
-			RepresentObject object = null;
+//			data.setNumOfColumn(rs.getMetaData().getColumnCount());
+			ResultSetMetaData metaData = rs.getMetaData();
+			RepresentObject object = new RepresentObject();
+			for (int i = 0; i < metaData.getColumnCount(); i++) {
+				object.addAttribute(String.valueOf(metaData.getColumnName(i + 1)));
+			}
+			data.setMetaData(object);
 			while (rs.next()) {
 				object = new RepresentObject();
-				for (int i = 0; i < data.getNumOfColumns(); i++) {
+				for (int i = 0; i < metaData.getColumnCount(); i++) {
 					object.addAttribute(String.valueOf(rs.getObject(i + 1)));
 				}
 				data.add(object);
