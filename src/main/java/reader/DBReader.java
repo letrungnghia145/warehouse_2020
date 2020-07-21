@@ -52,7 +52,7 @@ public class DBReader implements Reader {
 			RepresentObject object = null;
 			while (rs.next()) {
 				object = new RepresentObject();
-				for (int i = 0; i < data.getNumOfColumn(); i++) {
+				for (int i = 0; i < data.getNumOfColumns(); i++) {
 					object.addAttribute(String.valueOf(rs.getObject(i + 1)));
 				}
 				data.add(object);

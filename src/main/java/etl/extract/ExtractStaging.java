@@ -1,74 +1,38 @@
 package etl.extract;
 
 import java.io.File;
-import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.util.List;
 
 import constants.Action;
 import constants.Status;
 import constants.Strategy;
+import etl.load.LoadClass;
 import log.Logger;
 import model.Config;
 import model.ListData;
 import model.Log;
-import model.RepresentObject;
 import model.WrapFile;
+import reader.Readable;
 import reader.Reader;
 import reader.ReaderFactory;
-import utils.DBManageTableUtils;
 import utils.DBConnectionUtils;
+import utils.DBManageTableUtils;
 
 public class ExtractStaging {
-
-	private static boolean insertStaging(WrapFile file, int attributeLength) throws Exception {
-		StringBuilder sqlCallProcedure = new StringBuilder("CALL insert" + file.getDataContentType() + "(");
-		for (int i = 0; i < attributeLength; i++) {
-			sqlCallProcedure.append("?,");
-		}
-		sqlCallProcedure.deleteCharAt(sqlCallProcedure.lastIndexOf(","));
-		sqlCallProcedure.append(")");
-		Connection connection = null;
-		try {
-			Reader reader = ReaderFactory.getReader(file.getFileType());
-			ListData data = reader.readData(file);
-			connection = DBConnectionUtils.getConnection(Strategy.URL_STAGING);
-			connection.setAutoCommit(false);
-			CallableStatement callableStatement = connection.prepareCall(sqlCallProcedure.toString());
-
-			for (RepresentObject object : data) {
-				List<Object> attributes = object.attributes;
-				for (int i = 0; i < attributes.size(); i++) {
-					if (i == 0)
-						callableStatement.setInt(i + 1, Integer.parseInt(String.valueOf(attributes.get(i))));
-					callableStatement.setString(i + 1, String.valueOf(attributes.get(i)));
-				}
-				callableStatement.addBatch();
-			}
-			callableStatement.executeBatch();
-			connection.commit();
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e.getMessage());
-		} finally {
-			DBConnectionUtils.closeConnectionQuietly(connection);
-		}
-	}
-
 	public static boolean extractToStaging(Log log) {
 		Connection connection = null;
 		Strategy url_connection = Strategy.URL_STAGING;
 		try {
 			connection = DBConnectionUtils.getConnection(url_connection);
 			Config config = Config.loadConfig(log.getId_config());
-			WrapFile file = new WrapFile(log.getSource_dir() + File.separator + log.getSource_name());
-			String tableName = file.getDataContentType();
+			Readable readable = new WrapFile(log.getSource_dir() + File.separator + log.getSource_name());
+			String tableName = readable.getDataContentType();
 			String[] columns = config.getColumn_list().split(",");
 			boolean isCreated = DBManageTableUtils.createTable(url_connection, tableName, columns);
 			if (isCreated) {
-				boolean isInserted = insertStaging(file, columns.length);
+				Reader reader = ReaderFactory.getReader(readable.getFileType());
+				ListData data = reader.readData(readable);
+				boolean isInserted = LoadClass.loadDataToDB(url_connection, data);
 				Logger.updateLog(log.getId_log(), Action.LOAD_STAGING, Status.SUCCESS);
 				return isInserted;
 			}

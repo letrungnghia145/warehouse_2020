@@ -45,7 +45,7 @@ public class Test {
 	private static boolean insertData(Strategy url_connection, ListData data) {
 		StringBuilder sqlCallProcedure = new StringBuilder("CALL insert" + data.getDataContentType() + '(');
 		int count = 0;
-		while (count < data.getNumOfColumn()) {
+		while (count < data.getNumOfColumns()) {
 			sqlCallProcedure.append("?,");
 			count++;
 		}

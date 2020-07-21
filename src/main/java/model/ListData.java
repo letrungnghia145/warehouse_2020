@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class ListData extends ArrayList<RepresentObject> {
 	private static final long serialVersionUID = 1L;
 	private String dataContentType;
-	private int numOfColumn;
+	private int numOfColumns;
 
 	public ListData(String dataContentType) {
 		this.dataContentType = dataContentType.toLowerCase();
@@ -18,11 +18,11 @@ public class ListData extends ArrayList<RepresentObject> {
 		return dataContentType;
 	}
 
-	public int getNumOfColumn() {
-		return numOfColumn;
+	public int getNumOfColumns() {
+		return numOfColumns;
 	}
 
-	public void setNumOfColumn(int numOfColumn) {
-		this.numOfColumn = numOfColumn;
+	public void setNumOfColumn(int numOfColumns) {
+		this.numOfColumns = numOfColumns;
 	}
 }
