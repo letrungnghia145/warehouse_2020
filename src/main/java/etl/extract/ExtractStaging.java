@@ -1,4 +1,4 @@
-package extractor;
+package etl.extract;
 
 import java.io.File;
 import java.sql.CallableStatement;
@@ -56,7 +56,7 @@ public class ExtractStaging {
 		}
 	}
 
-	public static boolean loadStaging(Log log) {
+	public static boolean extractToStaging(Log log) {
 		Connection connection = null;
 		Strategy url_connection = Strategy.URL_STAGING;
 		try {

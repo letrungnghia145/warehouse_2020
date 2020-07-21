@@ -5,8 +5,8 @@ import com.chilkatsoft.CkSsh;
 import Exception.IllegalStagingStateException;
 import constants.Action;
 import constants.Status;
-import downloader.ScpDownloader;
-import extractor.ExtractStaging;
+import download.ScpDownloader;
+import etl.extract.ExtractStaging;
 import log.Logger;
 import model.Config;
 import model.Log;
@@ -20,7 +20,7 @@ public class Launcher {
 		CkSsh ssh = ServerUtils.connectSshServer(config.getHostname(), config.getPort(), config.getUsername(),
 				config.getPassword());
 		ScpDownloader.putPattern("sinhvien_");
-		ScpDownloader.putExtension("xlsx");
+//		ScpDownloader.putExtension("csv",);
 		System.out.println(ScpDownloader.download(ssh, config));
 	}
 

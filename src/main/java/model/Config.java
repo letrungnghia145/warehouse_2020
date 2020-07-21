@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import constants.Action;
 import constants.ConstantQuery;
 import constants.Status;
 import constants.Strategy;

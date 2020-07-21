@@ -36,7 +36,7 @@ public class XLSXReader implements Reader {
 				representObject = new RepresentObject();
 				row = rows.next();
 				for (int i = 0; i < data.getNumOfColumn(); i++) {
-					representObject.addValue(getValue(row.getCell(i)));
+					representObject.addAttribute(getValue(row.getCell(i)));
 				}
 				data.add(representObject);
 			}

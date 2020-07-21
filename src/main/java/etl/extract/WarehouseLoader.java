@@ -1,4 +1,4 @@
-package extractor;
+package etl.extract;
 
 public class WarehouseLoader {
 }

@@ -1,4 +1,4 @@
-package downloader;
+package download;
 
 import java.io.File;
 import java.sql.Timestamp;

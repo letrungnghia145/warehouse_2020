@@ -28,10 +28,10 @@ public class DateFormatUtils {
 		return simpleDateFormat.format(new java.util.Date(dayToMilis - timeLineInMilis - offsetTimeMilis));
 	}
 
-	public static long getTimeInMilis(long dayCount) {
+	public static long getTimeInMilis(int dayCount) {
 		long timeLineInMilis = changeTimeline();
 		long offsetTimeMilis = 2 * (24 * 3600 * 1000);
-		long dayToMilis = dayCount * (24 * 3600 * 1000);
+		long dayToMilis = (long) dayCount * (24 * 3600 * 1000);
 		return dayToMilis - timeLineInMilis - offsetTimeMilis;
 	}
 

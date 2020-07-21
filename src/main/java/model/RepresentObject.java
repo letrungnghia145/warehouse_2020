@@ -10,17 +10,17 @@ public class RepresentObject {
 	public List<Object> attributes = new ArrayList<>();
 //	public static int numOfColumn;
 
-	public RepresentObject(String... attributes) {
+	public RepresentObject(Object... attributes) {
 //		numOfColumn = attributes.length;
-		for (String value : attributes) {
+		for (Object value : attributes) {
 			if (value != null) {
 				this.attributes.add(value);
 			}
 		}
 	}
 
-	public void addValue(String value) {
-		attributes.add(value);
+	public void addAttribute(Object attribute) {
+		attributes.add(attribute);
 //		numOfColumn++;
 	}
 

@@ -3,6 +3,7 @@ package test;
 import java.io.File;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.util.List;
 
 import constants.Strategy;
@@ -15,6 +16,7 @@ import model.WrapFile;
 import reader.Reader;
 import reader.ReaderFactory;
 import utils.DBManageTableUtils;
+import utils.DateFormatUtils;
 import utils.DBConnectionUtils;
 
 public class Test {
@@ -78,12 +80,17 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws Exception {
-//		Reader reader = ReaderFactory.getReader("XLSX");
-//		WrapFile file = new WrapFile("data/drive.ecepvn.org/sinhvien_chieu_nhom11.xlsx");
-//		WrapArrayList<RepresentObject> data = reader.readData(file);
-
-		Log log = Logger.readLog(1);
-		boolean isLoaded = loadStaging(log);
-		System.out.println(isLoaded);
+//		Testz testz = new Testz();
+		Reader reader = ReaderFactory.getReader("XLSX");
+		WrapFile file = new WrapFile("data/drive.ecepvn.org/sinhvien_chieu_nhom11.xlsx");
+		ListData data = reader.readData(file);
+		for (RepresentObject object : data) {
+			List<Object> attributes = object.attributes;
+//			attributes.set(0, testz.treatingDataType(Integer.class, attributes.get(0)));
+//			System.out.println(attributes.get(0)+" "+attributes.get(0).getClass());
+			System.out.println(attributes);
+		}
+		long timeInMilis = DateFormatUtils.getTimeInMilis(35344);
+//		System.out.println(new Date(timeInMilis));
 	}
 }
