@@ -21,7 +21,7 @@ import reader.Reader;
 import reader.ReaderFactory;
 
 public class TestCompleteMethodClass {
-	public static void testReadDataMethodOfDBReaderClass() throws Exception {
+	public static int testReadDataMethodOfDBReaderClass() throws Exception {
 		String[] columns = new String[] { "id", "lastname", "firstname", "dob", "class_id", "email", "home_town" };
 		Readable readable = new DBTable(Strategy.URL_STAGING, "student", columns);
 		Reader reader = ReaderFactory.getReader(readable.getFileType());
@@ -29,15 +29,17 @@ public class TestCompleteMethodClass {
 		for (RepresentObject object : data) {
 			System.out.println(data.getDataContentType() + object.attributes);
 		}
+		return data.getNumOfColumn();
 	}
 
-	public static void testReadDataMethodOfXLSXReaderClass() throws Exception {
+	public static int testReadDataMethodOfXLSXReaderClass() throws Exception {
 		Readable readable = new WrapFile("data/drive.ecepvn.org/sinhvien_chieu_nhom11.xlsx");
 		Reader reader = ReaderFactory.getReader(readable.getFileType());
 		ListData data = reader.readData(readable);
 		for (RepresentObject object : data) {
 			System.out.println(data.getDataContentType() + object.attributes);
 		}
+		return data.getNumOfColumn();
 	}
 
 	public static void testLoadStagingMethodOfExtractStagingClass() {
@@ -46,7 +48,7 @@ public class TestCompleteMethodClass {
 		System.out.println(isLoaded);
 	}
 
-	public static void testReadDataMethodOfTXTReaderClass() throws Exception{
+	public static int testReadDataMethodOfTXTReaderClass() throws Exception {
 		WrapFile file = new WrapFile("data/drive.ecepvn.org/sinhvien_sang_nhom8.txt");
 
 		Reader reader = ReaderFactory.getReader(file.getFileType());
@@ -54,6 +56,7 @@ public class TestCompleteMethodClass {
 		for (RepresentObject representObject : data) {
 			System.out.println(representObject.attributes);
 		}
+		return data.getNumOfColumn();
 	}
 
 	public static void testTransformMethodOfTransformClass() throws Exception {
@@ -82,11 +85,13 @@ public class TestCompleteMethodClass {
 	}
 
 	public static void run() throws Exception {
-//		/* 1 */ testReadDataMethodOfDBReaderClass();
-//		/* 2 */ testReadDataMethodOfXLSXReaderClass();
+		int rs = 0;
+//		/* 1 */ rs = testReadDataMethodOfDBReaderClass();
+//		/* 2 */ rs = testReadDataMethodOfXLSXReaderClass();
 //		/* 3 */ testLoadStagingMethodOfExtractStagingClass();
-//		/*4*/  testTransformMethodOfTransformClass();
-		/*5*/ testReadDataMethodOfTXTReaderClass();
+//		/* 4 */ testTransformMethodOfTransformClass();
+//		/* 5 */ rs = testReadDataMethodOfTXTReaderClass();
+		System.out.println(rs);
 	}
 
 	public static void main(String[] args) throws Exception {

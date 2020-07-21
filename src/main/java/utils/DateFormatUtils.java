@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DateFormatUtils {
+	private static String[] delimeters = new String[] { "-", "/" };
+
 	private static long changeTimeline() {
 		Calendar calender1900 = Calendar.getInstance();
 		Calendar calender1970 = Calendar.getInstance();
@@ -36,7 +38,11 @@ public class DateFormatUtils {
 	}
 
 	public static long getTimeInMilis(String dateAsString) {
-		String[] values = dateAsString.split("/");
+		String[] values = null;
+		for (String delimiter : delimeters) {
+			if (dateAsString.contains(delimiter))
+				values = dateAsString.split(delimiter);
+		}
 		Calendar calendar = Calendar.getInstance();
 		Date date = Date.valueOf(values[2] + "-" + values[1] + "-" + values[0]);
 		calendar.setTime(date);

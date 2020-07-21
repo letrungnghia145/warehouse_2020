@@ -1,22 +1,19 @@
 package test;
 
+import java.sql.Date;
+import java.util.Calendar;
+
 import model.ListData;
 import model.RepresentObject;
 import model.WrapFile;
 import reader.Reader;
 import reader.ReaderFactory;
+import utils.DateFormatUtils;
 
 public class NewTest {
 	public static void main(String[] args) throws Exception {
-//		WrapFile file = new WrapFile("data/drive.ecepvn.org/sinhvien_chieu_nhom4.txt");
-		WrapFile file = new WrapFile("data/drive.ecepvn.org/sinhvien_chieu_nhom7.csv");
-
-		Reader reader = ReaderFactory.getReader(file.getFileType());
-		ListData data = reader.readData(file);
-		for (RepresentObject representObject : data) {
-			System.out.println(representObject.attributes);
-		}
-//		String d = "\t";
-//		System.out.println(d.charAt(0));
+		long timeInMilis = DateFormatUtils.getTimeInMilis("14-05-1999");
+		Date date = new Date(timeInMilis);
+		System.out.println(date);
 	}
 }

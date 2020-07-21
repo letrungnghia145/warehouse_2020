@@ -10,6 +10,7 @@ import constants.Status;
 import constants.Strategy;
 import log.Logger;
 import model.Config;
+import model.ListData;
 import model.Log;
 import model.RepresentObject;
 import model.WrapFile;
@@ -30,7 +31,7 @@ public class ExtractStaging {
 		Connection connection = null;
 		try {
 			Reader reader = ReaderFactory.getReader(file.getFileType());
-			List<RepresentObject> data = reader.readData(file);
+			ListData data = reader.readData(file);
 			connection = DBConnectionUtils.getConnection(Strategy.URL_STAGING);
 			connection.setAutoCommit(false);
 			CallableStatement callableStatement = connection.prepareCall(sqlCallProcedure.toString());

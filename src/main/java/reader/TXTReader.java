@@ -23,11 +23,13 @@ public class TXTReader implements Reader {
 		while ((readLine = reader.readLine()) != null) {
 			object = new RepresentObject();
 			if (index == 0) {
+				data.setNumOfColumn(readLine.split(delimiter).length);
 				index++;
 				continue;
 			}
 			String standalized = standalize(readLine, delimiter);
-			for (String attribute : standalized.split(delimiter)) {
+			String[] attributes = standalized.split(delimiter);
+			for (String attribute : attributes) {
 				object.addAttribute(attribute);
 			}
 			index++;
