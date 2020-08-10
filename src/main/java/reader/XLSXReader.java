@@ -45,7 +45,7 @@ public class XLSXReader implements Reader {
 				}
 				row = rows.next();
 //				row = rows.next();
-				for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
+				for (int i = 0; i < data.getMetaData().getNumOfColumns(); i++) {
 					representObject.addAttribute(getValue(row.getCell(i)));
 				}
 				data.add(representObject);

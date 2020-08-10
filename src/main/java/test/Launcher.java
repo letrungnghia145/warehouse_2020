@@ -1,37 +1,35 @@
 package test;
 
-import com.chilkatsoft.CkSsh;
-
-import Exception.IllegalStagingStateException;
-import constants.Action;
+import constants.Extension;
 import constants.Status;
-import download.ScpDownloader;
-import etl.extract.ExtractStaging;
-import log.Logger;
+import download.SCPDownloadClass;
 import model.Config;
-import model.Log;
-import utils.ServerUtils;
 
 public class Launcher {
 	public static void runDownload() {
-		Config config = Config.loadConfig(1);
-
-		// Need these function to execute download
-		CkSsh ssh = ServerUtils.connectSshServer(config.getHostname(), config.getPort(), config.getUsername(),
-				config.getPassword());
-		ScpDownloader.putPattern("sinhvien_");
-//		ScpDownloader.putExtension("csv",);
-		System.out.println(ScpDownloader.download(ssh, config));
+		Config config = Config.loadConfig(Status.IN_PROGRESS);
+		Extension[] extensions = new Extension[] { Extension.CSV, Extension.TXT, Extension.XLS, Extension.XLSX };
+		SCPDownloadClass.putExtension(extensions);
+		SCPDownloadClass.putPattern("sinhvien_");
+		SCPDownloadClass.download(config);
 	}
 
-	public static void runLoadToStaging() throws IllegalStagingStateException {
+	public static void runLoadToStaging() {
 //		Log log = Logger.readLog(1, Action.DOWNLOAD, Status.SUCCESS);
 //		ExtractStaging.loadStaging(log);
 	}
 
 	public static void main(String[] args) {
 		// Test download
-		Launcher.runDownload();
+//		Launcher.runDownload();
 		// load staging test
+
+//		List<Config> loadAllConfigs = Config.loadAllConfigs(Status.IN_PROGRESS);
+//		for (Config config : loadAllConfigs) {
+//			System.out.println(config);
+//		}
+
+		Config config = Config.loadConfig(Status.DONE);
+		System.out.println(config);
 	}
 }

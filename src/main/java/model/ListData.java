@@ -26,10 +26,4 @@ public class ListData extends ArrayList<RepresentObject> {
 	public void setMetaData(RepresentObject object) {
 		this.metaData = new MetaData(object);
 	}
-
-//	public void setMetaData(MetaData metaData) {
-//		this.metaData = metaData;
-//	}
-	public static void main(String[] args) {
-	}
 }

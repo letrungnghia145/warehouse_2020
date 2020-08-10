@@ -32,9 +32,9 @@ public class ExtractStaging {
 			if (isCreated) {
 				Reader reader = ReaderFactory.getReader(readable.getFileType());
 				ListData data = reader.readData(readable);
-				boolean isInserted = LoadClass.loadDataToDB(url_connection, data);
+				boolean isloaded = LoadClass.loadDataToDB(url_connection, data);
 				Logger.updateLog(log.getId_log(), Action.LOAD_STAGING, Status.SUCCESS);
-				return isInserted;
+				return isloaded;
 			}
 		} catch (Exception e) {
 			Logger.updateLog(log.getId_log(), Action.LOAD_STAGING, Status.FAIL);

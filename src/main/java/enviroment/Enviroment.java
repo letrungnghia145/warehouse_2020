@@ -1,5 +1,6 @@
 package enviroment;
 
+import java.io.IOException;
 import java.util.Properties;
 
 public class Enviroment {
@@ -8,13 +9,13 @@ public class Enviroment {
 		try {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			properties = new Properties();
-			properties.load(classLoader.getResourceAsStream("config.properties"));
+			properties.load(classLoader.getResourceAsStream("resources/config.properties"));
 		} catch (Exception e) {
 			System.out.println("Error occured when loading resource");
 		}
 	}
 
-	public static String getProps(String key) {
+	public static String getProps(String key) throws IOException {
 		return (String) properties.getProperty(key);
 	}
 }

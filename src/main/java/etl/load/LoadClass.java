@@ -20,6 +20,7 @@ public class LoadClass {
 			for (RepresentObject object : data) {
 				List<Object> attributes = object.attributes;
 				for (int i = 0; i < attributes.size(); i++) {
+//					System.out.println();
 					if (i == 0)
 						callableStatement.setInt(i + 1, Integer.parseInt(String.valueOf(attributes.get(i))));
 					callableStatement.setString(i + 1, String.valueOf(attributes.get(i)));

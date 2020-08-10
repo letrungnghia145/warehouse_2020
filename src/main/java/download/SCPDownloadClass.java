@@ -9,13 +9,14 @@ import com.chilkatsoft.CkScp;
 import com.chilkatsoft.CkSsh;
 
 import constants.Action;
+import constants.Extension;
 import constants.Status;
 import log.Logger;
 import model.Config;
 import model.Log;
 import utils.ServerUtils;
 
-public class ScpDownloader {
+public class SCPDownloadClass {
 	private static List<String> fileExtensions;
 	private static String pattern;
 	static {
@@ -26,10 +27,10 @@ public class ScpDownloader {
 		fileExtensions.add("csv");
 	}
 
-	public static void putExtension(String... extensions) {
+	public static void putExtension(Extension... extensions) {
 		fileExtensions.removeAll(fileExtensions);
-		for (String ext : extensions) {
-			fileExtensions.add(ext);
+		for (Extension extension : extensions) {
+			fileExtensions.add(extension.name().toLowerCase());
 		}
 	}
 
@@ -42,11 +43,14 @@ public class ScpDownloader {
 	}
 
 	public static void putPattern(String pattern) {
-		ScpDownloader.pattern = pattern;
+		SCPDownloadClass.pattern = pattern;
 	}
 
-	public static boolean download(CkSsh ssh, Config config) {
+	public static boolean download(Config config) {
+		CkSsh ssh = null;
 		try {
+			ssh = ServerUtils.connectSshServer(config.getHostname(), config.getPort(), config.getUsername(),
+					config.getPassword());
 			if (ssh != null) {
 				CkScp scp = new CkScp();
 				scp.UseSsh(ssh);

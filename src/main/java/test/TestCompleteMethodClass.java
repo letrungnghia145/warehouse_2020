@@ -34,7 +34,7 @@ public class TestCompleteMethodClass {
 	}
 
 	public static int testReadDataMethodOfXLSXReaderClass() throws Exception {
-		Readable readable = new WrapFile("data/drive.ecepvn.org/sinhvien_chieu_nhom11.xlsx");
+		Readable readable = new WrapFile("data/drive.ecepvn.org/sinhvien_sang_nhom11.xlsx");
 		Reader reader = ReaderFactory.getReader(readable.getFileType());
 		ListData data = reader.readData(readable);
 		for (RepresentObject object : data) {
@@ -96,8 +96,8 @@ public class TestCompleteMethodClass {
 
 	public static void run() throws Exception {
 		int rs = 0;
-		/* 1 */ rs = testReadDataMethodOfDBReaderClass();
-//		/* 2 */ rs = testReadDataMethodOfXLSXReaderClass();
+//		/* 1 */ rs = testReadDataMethodOfDBReaderClass();
+		/* 2 */ rs = testReadDataMethodOfXLSXReaderClass();
 //		/* 3 */ testLoadStagingMethodOfExtractStagingClass();
 //		/* 4 */ testTransformMethodOfTransformClass();
 //		/* 5 */ rs = testReadDataMethodOfTXTReaderClass();
