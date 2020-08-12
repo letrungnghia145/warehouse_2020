@@ -21,6 +21,7 @@ public class Config {
 	private int port;
 	private String username;
 	private String password;
+	private String source_type;
 	private String remote_dir;
 	private String local_dir;
 	private String column_list;
@@ -41,6 +42,7 @@ public class Config {
 				config.setId_config(rs.getInt("id_config"));
 				config.setLocal_dir(rs.getString("local_dir"));
 				config.setPassword(rs.getString("password"));
+				config.setSource_type(rs.getString("source_type"));
 				config.setPort(rs.getInt("port"));
 				config.setRemote_dir(rs.getString("remote_dir"));
 				config.setStatus(rs.getString("status"));
@@ -68,6 +70,7 @@ public class Config {
 				config.setHostname(rs.getString("hostname"));
 				config.setId_config(rs.getInt("id_config"));
 				config.setLocal_dir(rs.getString("local_dir"));
+				config.setSource_type(rs.getString("source_type"));
 				config.setPassword(rs.getString("password"));
 				config.setPort(rs.getInt("port"));
 				config.setRemote_dir(rs.getString("remote_dir"));
@@ -98,6 +101,7 @@ public class Config {
 				config.setHostname(rs.getString("hostname"));
 				config.setId_config(rs.getInt("id_config"));
 				config.setLocal_dir(rs.getString("local_dir"));
+				config.setSource_type(rs.getString("source_type"));
 				config.setPassword(rs.getString("password"));
 				config.setPort(rs.getInt("port"));
 				config.setRemote_dir(rs.getString("remote_dir"));
@@ -128,6 +132,7 @@ public class Config {
 				config.setHostname(rs.getString("hostname"));
 				config.setId_config(rs.getInt("id_config"));
 				config.setLocal_dir(rs.getString("local_dir"));
+				config.setSource_type(rs.getString("source_type"));
 				config.setPassword(rs.getString("password"));
 				config.setPort(rs.getInt("port"));
 				config.setRemote_dir(rs.getString("remote_dir"));

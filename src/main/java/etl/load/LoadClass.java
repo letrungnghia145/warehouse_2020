@@ -19,13 +19,16 @@ public class LoadClass {
 			CallableStatement callableStatement = connection.prepareCall(sqlCallProcedure);
 			for (RepresentObject object : data) {
 				List<Object> attributes = object.attributes;
-				for (int i = 0; i < attributes.size(); i++) {
-//					System.out.println();
-					if (i == 0)
-						callableStatement.setInt(i + 1, Integer.parseInt(String.valueOf(attributes.get(i))));
-					callableStatement.setString(i + 1, String.valueOf(attributes.get(i)));
+				try {
+					for (int i = 0; i < attributes.size(); i++) {
+						if (i == 0)
+							callableStatement.setInt(i + 1, Integer.parseInt(String.valueOf(attributes.get(i))));
+						callableStatement.setString(i + 1, String.valueOf(attributes.get(i)));
+					}
+					callableStatement.addBatch();
+				} catch (Exception e) {
+					continue;
 				}
-				callableStatement.addBatch();
 			}
 			callableStatement.executeBatch();
 			connection.commit();
